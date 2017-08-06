@@ -4,6 +4,14 @@
 
  * Starting and stopping a non sticky positioning algorithm background service
 
+### Installation
+
+* Inside your cordova project execute :
+
+```
+cordova plugin add
+```
+
 ### Usage
 
 ```
@@ -12,3 +20,4 @@ declare var cordova;
 
 cordova.plugins.ACPositioningAlgorithm.startPositioning();
 cordova.plugins.ACPositioningAlgorithm.stopPositioning();
+```
