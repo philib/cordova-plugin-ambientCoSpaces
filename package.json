@@ -1,0 +1,27 @@
+{
+  "name": "com.htwg.ambientcospaces.cordova.positioningalgorithm",
+  "version": "3.4.1",
+  "description": "Proximity Beacon Monitoring and Transmission Plugin (supporting iBeacons)",
+  "cordova": {
+    "id": "com.htwg.ambientcospaces.cordova.positioningalgorithm",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petermetz/cordova-plugin-ibeacon.git"
+  },
+  "keywords": [
+    "cordova",
+    "ibeacon",
+    "beacon",
+    "bluetooth"
+  ],
+  "author": "Peter Metz (Somogyvari) <peter.metz@unarin.com>",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/petermetz/cordova-plugin-ibeacon/issues"
+  },
+  "homepage": "https://github.com/petermetz/cordova-plugin-ibeacon"
+}
