@@ -14,15 +14,52 @@
                        value="cordova.ambient.cospaces.positioning.algoritm.ACPositioningAlgorithm"/>
             </feature>
         </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
+            <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        </config-file>
+
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
+
+            <receiver android:name="org.altbeacon.beacon.startup.StartupBroadcastReceiver" >
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                    <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                </intent-filter>
+            </receiver>
+
             <service
                     android:name="cordova.ambient.cospaces.positioning.algoritm.AlgorithmService"
                     android:enabled="true"
                     android:exported="true"></service>
+
+            <service android:enabled="true"
+                     android:exported="true"
+                     android:isolatedProcess="false"
+                     android:label="iBeacon"
+                     android:name="org.altbeacon.beacon.service.BeaconService">
+            </service>
+
+            <service android:enabled="true"
+                     android:name="org.altbeacon.beacon.BeaconIntentProcessor">
+                <meta-data android:name="background" android:value="true" />
+                <intent-filter android:priority="1" >
+                    <action android:name="com.unarin.cordova.beacon.IBeaconPlugin.DID_RANGING" />
+                    <action android:name="com.unarin.cordova.beacon.IBeaconPlugin.DID_MONITORING" />
+                </intent-filter>
+            </service>
         </config-file>
         <source-file src="src/android/ACPositioningAlgorithm.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
         <source-file src="src/android/AlgorithmService.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
+
+        <source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" />
     </platform>
 </plugin>
