@@ -9,7 +9,7 @@
 * Inside your cordova project execute :
 
 ```
-cordova plugin add
+cordova plugin add /path/to/root/folder
 ```
 
 ### Usage
