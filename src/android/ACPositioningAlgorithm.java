@@ -50,6 +50,7 @@ public class ACPositioningAlgorithm extends CordovaPlugin {
     }
 
     private void startPositioning(CallbackContext callbackContext) {
+        this.context.stopService(in);
         this.context.startService(in);
     }
 
