@@ -87,7 +87,7 @@ public class AlgorithmService extends Service {
         message.arg1 = startId;
         mServiceHandler.sendMessage(message);
 
-        return Service.START_NOT_STICKY;
+        return Service.START_STICKY;
     }
 
     @Override
