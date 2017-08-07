@@ -59,6 +59,8 @@
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
         <source-file src="src/android/AlgorithmService.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
+        <source-file src="src/android/BeaconHandler.java"
+                     target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
 
         <source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" />
     </platform>

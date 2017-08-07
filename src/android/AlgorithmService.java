@@ -8,16 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.BleNotAvailableException;
-import org.altbeacon.beacon.Identifier;
-import org.altbeacon.beacon.MonitorNotifier;
-import org.altbeacon.beacon.RangeNotifier;
-import org.altbeacon.beacon.Region;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -118,15 +108,11 @@ public class AlgorithmService extends Service {
         }
     }
 
-    public class BackgroundThread extends Thread implements BeaconConsumer {
+    public class BackgroundThread extends Thread{
 
-        protected static final String TAG = "com.htwg.ambientcospaces";
-        private BeaconManager beaconManager = BeaconManager.getInstanceForApplication(getApplicationContext());
-        private BluetoothAdapter bluetoothAdapter;
-
+        private BeaconHandler beaconHandler;
         volatile boolean running = true;
         private Timer timer;
-        private Context context;
         private final Handler toastHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -134,21 +120,14 @@ public class AlgorithmService extends Service {
             }
         };
 
-        public BackgroundThread(Context context){
-            this.context = context;
+        public BackgroundThread(Context context) {
+            beaconHandler = new BeaconHandler(context);
         }
 
 
         @Override
         public void run() {
-            try {
-                bluetoothAdapter.enable();
-                beaconManager.bind(this);
-            } catch (Exception e){
-                Log.e(TAG, "Thread run error : " + e.getCause());
-            }
-
-
+            this.beaconHandler.startScan();
             timer = new Timer();
             TimerTask myTask = new TimerTask() {
                 @Override
@@ -158,50 +137,17 @@ public class AlgorithmService extends Service {
             };
 
             timer.schedule(myTask, 2000, 2000);
-            while (!running){
-                beaconManager.unbind(this);
+            while (!running) {
+                this.beaconHandler.stopScan();
                 return;
             }
-        }
-
-        @Override
-        public void onBeaconServiceConnect() {
-            beaconManager.setRangeNotifier(new RangeNotifier() {
-                @Override
-                public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                    if (beacons.size() > 0) {
-                        Log.i(TAG, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
-                    }
-                }
-            });
-
-            try {
-                beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-            } catch (RemoteException e) {    }
         }
 
         public void cancel() {
             timer.cancel();
             running = false;
         }
-        //////// IBeaconConsumer implementation /////////////////////
 
-        @Override
-        public Context getApplicationContext() {
-            return this.context;
-        }
-
-        @Override
-        public void unbindService(ServiceConnection connection) {
-            Log.i(TAG,"Unbind from IBeacon service");
-            this.getApplicationContext().unbindService(connection);
-        }
-
-        @Override
-        public boolean bindService(Intent intent, ServiceConnection connection, int mode) {
-            Log.i(TAG,"Bind to IBeacon service");
-            return this.getApplicationContext().bindService(intent, connection, mode);
-        }
     }
 }
 
