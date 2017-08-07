@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="cordova-ambient-cospaces-positioning-algoritm" version="0.0.1"
         xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>ACPositioningAlgorithm</name>
+    <name>AmbientCoSpaces</name>
 
-    <js-module name="ACPositioningAlgorithm" src="www/ACPositioningAlgorithm.js">
-        <clobbers target="cordova.plugins.ACPositioningAlgorithm"/>
+    <js-module name="AmbientCoSpaces" src="www/AmbientCoSpaces.js">
+        <clobbers target="cordova.plugins.AmbientCoSpaces"/>
     </js-module>
 
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
-            <feature name="ACPositioningAlgorithm">
+            <feature name="AmbientCoSpaces">
                 <param name="android-package"
-                       value="cordova.ambient.cospaces.positioning.algoritm.ACPositioningAlgorithm"/>
+                       value="cordova.ambient.cospaces.positioning.algoritm.AmbientCoSpaces"/>
             </feature>
         </config-file>
 
@@ -55,7 +55,7 @@
                 </intent-filter>
             </service>
         </config-file>
-        <source-file src="src/android/ACPositioningAlgorithm.java"
+        <source-file src="src/android/AmbientCoSpaces.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
         <source-file src="src/android/BackgroundService.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>

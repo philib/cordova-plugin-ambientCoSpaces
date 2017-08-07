@@ -12,12 +12,12 @@ import android.content.Intent;
 /**
  * This class echoes a string called from JavaScript.
  */
-public class ACPositioningAlgorithm extends CordovaPlugin {
+public class AmbientCoSpaces extends CordovaPlugin {
 
     private Intent in;
     private Activity context;
 
-    public ACPositioningAlgorithm() {
+    public AmbientCoSpaces() {
     }
 
     @Override
