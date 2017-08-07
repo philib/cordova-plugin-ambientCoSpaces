@@ -14,7 +14,6 @@ import android.content.Intent;
  */
 public class ACPositioningAlgorithm extends CordovaPlugin {
 
-    private AlgorithmService algorithmService;
     private Intent in;
     private Activity context;
 
@@ -24,7 +23,7 @@ public class ACPositioningAlgorithm extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.context = cordova.getActivity();
-        this.in = new Intent(context, AlgorithmService.class);
+        this.in = new Intent(context, BackgroundService.class);
         if (action.equals("startPositioning")) {
             this.startPositioning(callbackContext);
         } else if (action.equals("stopPositioning")) {

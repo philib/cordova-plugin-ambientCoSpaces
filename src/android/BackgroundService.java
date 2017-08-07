@@ -18,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Collection;
 
-public class AlgorithmService extends Service {
+public class BackgroundService extends Service {
 
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
@@ -26,7 +26,7 @@ public class AlgorithmService extends Service {
     private HandlerThread thread;
 
 
-    public AlgorithmService() {
+    public BackgroundService() {
     }
 
     @Override

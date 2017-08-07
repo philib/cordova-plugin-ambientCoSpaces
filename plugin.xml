@@ -35,7 +35,7 @@
             </receiver>
 
             <service
-                    android:name="cordova.ambient.cospaces.positioning.algoritm.AlgorithmService"
+                    android:name="cordova.ambient.cospaces.positioning.algoritm.BackgroundService"
                     android:enabled="true"
                     android:exported="true"></service>
 
@@ -57,7 +57,7 @@
         </config-file>
         <source-file src="src/android/ACPositioningAlgorithm.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
-        <source-file src="src/android/AlgorithmService.java"
+        <source-file src="src/android/BackgroundService.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
         <source-file src="src/android/BeaconHandler.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
