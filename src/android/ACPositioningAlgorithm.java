@@ -28,10 +28,7 @@ public class ACPositioningAlgorithm extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.context = cordova.getActivity();
         this.in = new Intent(context, AlgorithmService.class);
-        if (action.equals("coolMethod")) {
-            String message = args.getString(0);
-            this.coolMethod(message, callbackContext);
-        } else if (action.equals("startPositioning")) {
+        if (action.equals("startPositioning")) {
             this.startPositioning(callbackContext);
         } else if (action.equals("stopPositioning")) {
             this.stopPositioning(callbackContext);
