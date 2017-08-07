@@ -2,38 +2,15 @@ package cordova.ambient.cospaces.positioning.algoritm;
 
 
 import android.content.Context;
-
-import org.apache.cordova.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
 import android.app.Service;
-import android.content.Intent;
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.util.Log;
 import android.widget.Toast;
 import android.os.RemoteException;
 
@@ -138,12 +115,12 @@ public class AlgorithmService extends Service {
 
             timer.schedule(myTask, 2000, 2000);
             while (!running) {
-                this.beaconHandler.stopScan();
                 return;
             }
         }
 
         public void cancel() {
+            this.beaconHandler.stopScan();
             timer.cancel();
             running = false;
         }

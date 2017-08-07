@@ -40,20 +40,25 @@ public class BeaconHandler implements BeaconConsumer {
         });
     }
 
-    public void stopScan(){
+    public void stopScan()  {
+        Log.i(TAG, "Stop Scan");
+        try {
+            beaconManager.stopRangingBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            Log.i(TAG, "Error stopscan "+e.getMessage());
+        }
         beaconManager.unbind(this);
     }
 
     //////// IBeaconConsumer implementation /////////////////////
 
-    @Override
     public Context getApplicationContext() {
         return this.context;
     }
 
     @Override
     public void unbindService(ServiceConnection connection) {
-        Log.i(TAG, "Unbind from IBeacon service");
+        Log.i(TAG, "Unbind to IBeacon service");
         this.getApplicationContext().unbindService(connection);
     }
 
