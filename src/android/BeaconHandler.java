@@ -1,10 +1,6 @@
 package cordova.ambient.cospaces.positioning.algoritm;
 
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.RangeNotifier;
-import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.*;
 
 import android.content.Context;
 import android.os.RemoteException;
@@ -35,6 +31,11 @@ public class BeaconHandler implements BeaconConsumer {
                 Log.i(TAG, "BEACONS: " + beacons.size());
                 if (beacons.size() > 0) {
                     Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+                    PositioningAlgorithm pa = new PositioningAlgorithm();
+
+                    Identifier beacon = beacons.iterator().next().getId3();
+                    Position p = pa.calculatePos(beacon.toInt());
+                    Log.i(TAG, "Position is : " + p.x + " " + p.y);
                 }
             }
         });
