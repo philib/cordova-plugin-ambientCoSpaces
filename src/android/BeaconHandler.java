@@ -1,5 +1,6 @@
 package cordova.ambient.cospaces.positioning.algoritm;
 
+import android.telephony.TelephonyManager;
 import org.altbeacon.beacon.*;
 
 import android.provider.Settings.Secure;
@@ -37,9 +38,10 @@ public class BeaconHandler implements BeaconConsumer {
                     Identifier beacon = beacons.iterator().next().getId3();
                     Position p = pa.calculatePos(beacon.toInt());
                     Log.i(TAG, "Position is : " + p.x + " " + p.y);
-                    String android_id = Secure.getString(getApplicationContext().getContentResolver(),
+                    p.imei = Secure.getString(getApplicationContext().getContentResolver(),
                             Secure.ANDROID_ID);
-                    Log.i(TAG, "Device Uuid is : " + android_id);
+
+                    Log.i(TAG, "Device Uuid is : " + p.imei);
                     RestClient c = new RestClient(getApplicationContext());
                     c.postPosition(p);
 
