@@ -30,19 +30,19 @@ public class RestClient {
         this.client = getUnsafeOkHttpClient();
     }
 
-    public void postPosition(final int x, final int y) {
+    public void postPosition(Position p) {
         String jsonString = "";
         try {
             JSONObject data = new JSONObject()
-                    .put("building", "O")
-                    .put("floor", "2")
-                    .put("imei", "12345")
-                    .put("timestamp", "1495101496698")
-                    .put("username", "Background")
-                    .put("x", String.valueOf(x))
-                    .put("y", String.valueOf(y))
-                    .put("roleColor", "#253bbb")
-                    .put("roleName", "Student");
+                    .put("building", p.building)
+                    .put("floor", String.valueOf(p.floor))
+                    .put("imei", p.imei)
+                    .put("timestamp", System.currentTimeMillis() / 1000L)
+                    .put("username", p.username)
+                    .put("x", String.valueOf(p.x))
+                    .put("y", String.valueOf(p.y))
+                    .put("roleColor", p.roleColor)
+                    .put("roleName", p.roleName);
             jsonString = data.toString();
         } catch (JSONException e) {
             e.printStackTrace();

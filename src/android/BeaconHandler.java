@@ -41,7 +41,7 @@ public class BeaconHandler implements BeaconConsumer {
                             Secure.ANDROID_ID);
                     Log.i(TAG, "Device Uuid is : " + android_id);
                     RestClient c = new RestClient(getApplicationContext());
-                    c.postPosition(p.x,p.y);
+                    c.postPosition(p);
 
                 }
             }
