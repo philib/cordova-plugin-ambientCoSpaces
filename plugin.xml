@@ -22,6 +22,7 @@
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
             <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.INJECT_EVENTS"/>
         </config-file>
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
@@ -65,8 +66,12 @@
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
         <source-file src="src/android/Position.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
+        <source-file src="src/android/RestClient.java"
+                     target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
 
 
         <source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" />
+        <source-file src="libs/android/okhttp-3.8.1.jar" target-dir="libs" framework="true" />
+        <source-file src="libs/android/okio-1.13.0.jar" target-dir="libs" framework="true" />
     </platform>
 </plugin>
