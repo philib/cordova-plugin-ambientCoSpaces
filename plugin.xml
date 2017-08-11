@@ -11,7 +11,7 @@
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="AmbientCoSpaces">
                 <param name="android-package"
-                       value="cordova.ambient.cospaces.positioning.algoritm.AmbientCoSpaces"/>
+                       value="ambient.cospaces.positioning.algorithm.AmbientCoSpaces"/>
             </feature>
         </config-file>
 
@@ -36,7 +36,7 @@
             </receiver>
 
             <service
-                    android:name="cordova.ambient.cospaces.positioning.algoritm.BackgroundService"
+                    android:name="ambient.cospaces.positioning.algorithm.BackgroundService"
                     android:enabled="true"
                     android:exported="true"></service>
 
@@ -56,17 +56,17 @@
                 </intent-filter>
             </service>
         </config-file>
-        <source-file src="src/android/AmbientCoSpaces.java"
+        <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/AmbientCoSpaces.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
-        <source-file src="src/android/BackgroundService.java"
+        <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/BackgroundService.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
-        <source-file src="src/android/BeaconHandler.java"
+        <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/BeaconHandler.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
-        <source-file src="src/android/PositioningAlgorithm.java"
+        <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/PositioningAlgorithm.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
-        <source-file src="src/android/Position.java"
+        <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/Position.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
-        <source-file src="src/android/RestClient.java"
+        <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/RestClient.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
 
 

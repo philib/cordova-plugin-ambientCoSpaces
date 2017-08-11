@@ -1,4 +1,4 @@
-package cordova.ambient.cospaces.positioning.algoritm;
+package ambient.cospaces.positioning.algorithm;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,10 +1,9 @@
-package cordova.ambient.cospaces.positioning.algoritm;
+package ambient.cospaces.positioning.algorithm;
 
 import org.apache.cordova.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;

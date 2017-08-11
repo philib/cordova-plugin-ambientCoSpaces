@@ -1,4 +1,4 @@
-package cordova.ambient.cospaces.positioning.algoritm;
+package ambient.cospaces.positioning.algorithm;
 
 
 import android.content.Context;

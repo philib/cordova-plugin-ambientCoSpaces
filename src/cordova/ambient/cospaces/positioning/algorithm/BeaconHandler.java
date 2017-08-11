@@ -1,6 +1,5 @@
-package cordova.ambient.cospaces.positioning.algoritm;
+package ambient.cospaces.positioning.algorithm;
 
-import android.telephony.TelephonyManager;
 import org.altbeacon.beacon.*;
 
 import android.provider.Settings.Secure;
@@ -28,7 +27,6 @@ public class BeaconHandler implements BeaconConsumer {
     public void startScan(){
         beaconManager.bind(this);
         beaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
             public void didRangeBeaconsInRegion(Collection<org.altbeacon.beacon.Beacon> beacons, Region region) {
                 Log.i(TAG, "BEACONS: " + beacons.size());
                 if (beacons.size() > 0) {
@@ -67,19 +65,16 @@ public class BeaconHandler implements BeaconConsumer {
         return this.context;
     }
 
-    @Override
     public void unbindService(ServiceConnection connection) {
         Log.i(TAG, "Unbind to IBeacon service");
         this.getApplicationContext().unbindService(connection);
     }
 
-    @Override
     public boolean bindService(Intent intent, ServiceConnection connection, int mode) {
         Log.i(TAG, "Bind to IBeacon service");
         return this.getApplicationContext().bindService(intent, connection, mode);
     }
 
-    @Override
     public void onBeaconServiceConnect() {
         try {
             Log.i(TAG, "Start Ranging in Region");
