@@ -23,8 +23,12 @@ public class AmbientCoSpaces extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.context = cordova.getActivity();
         this.in = new Intent(context, BackgroundService.class);
-        if (action.equals("startPositioning")) {
-            this.startPositioning(callbackContext);
+        if (action.equals("startForegroundPositioning")) {
+            this.in.putExtra("background",false);
+            this.start(callbackContext);
+        } else if (action.equals("startBackgroundPositioning")) {
+            this.in.putExtra("background",true);
+            this.start(callbackContext);
         } else if (action.equals("stopPositioning")) {
             this.stopPositioning(callbackContext);
         } else {
@@ -33,15 +37,7 @@ public class AmbientCoSpaces extends CordovaPlugin {
         return true;
     }
 
-    private void coolMethod(String message, CallbackContext callbackContext) {
-        if (message != null && message.length() > 0) {
-            callbackContext.success(message);
-        } else {
-            callbackContext.error("Expected one non-empty string argument.");
-        }
-    }
-
-    private void startPositioning(CallbackContext callbackContext) {
+    private void start(CallbackContext callbackContext) {
         this.context.stopService(in);
         this.context.startService(in);
     }

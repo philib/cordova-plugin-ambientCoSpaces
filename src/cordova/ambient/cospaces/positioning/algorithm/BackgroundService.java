@@ -10,13 +10,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.util.Log;
 import android.widget.Toast;
-import android.os.RemoteException;
-
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Collection;
 
 public class BackgroundService extends Service {
 
@@ -24,9 +18,12 @@ public class BackgroundService extends Service {
     private ServiceHandler mServiceHandler;
     private BackgroundThread backgroundThread;
     private HandlerThread thread;
+    private BeaconHandler beaconHandler;
+    private boolean background;
 
 
     public BackgroundService() {
+        this.beaconHandler = new BeaconHandler(this);
     }
 
     @Override
@@ -47,20 +44,30 @@ public class BackgroundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //TODO do something useful
-        Toast.makeText(getApplicationContext(), "service start", Toast.LENGTH_SHORT).show();
-
         // call a new service handler. The service ID can be used to identify the service
         Message message = mServiceHandler.obtainMessage();
         message.arg1 = startId;
-        mServiceHandler.sendMessage(message);
+        this.background = intent.getBooleanExtra("background", false);
+        if(this.background){
+            Toast.makeText(getApplicationContext(), "Background started", Toast.LENGTH_SHORT).show();
+            mServiceHandler.sendMessage(message);
+        }else {
+            Toast.makeText(getApplicationContext(), "Foreground started", Toast.LENGTH_SHORT).show();
+            this.beaconHandler.startScan();
+        }
 
         return Service.START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Toast.makeText(getApplicationContext(), "service done", Toast.LENGTH_SHORT).show();
-        backgroundThread.cancel();
+        if(this.background){
+            Toast.makeText(getApplicationContext(), "Background stopped", Toast.LENGTH_SHORT).show();
+            backgroundThread.cancel();
+        }else {
+            Toast.makeText(getApplicationContext(), "Foreground stopped", Toast.LENGTH_SHORT).show();
+            this.beaconHandler.stopScan();
+        }
         thread.quit();
     }
 
@@ -88,41 +95,19 @@ public class BackgroundService extends Service {
     public class BackgroundThread extends Thread{
 
         private BeaconHandler beaconHandler;
-        volatile boolean running = true;
-        private Timer timer;
-        private final Handler toastHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
-            }
-        };
 
         public BackgroundThread(Context context) {
             beaconHandler = new BeaconHandler(context);
         }
 
-
         @Override
         public void run() {
             this.beaconHandler.startScan();
-            timer = new Timer();
-            TimerTask myTask = new TimerTask() {
-                @Override
-                public void run() {
-                    toastHandler.sendEmptyMessage(0);
-                }
-            };
-
-            timer.schedule(myTask, 2000, 2000);
-            while (!running) {
-                return;
-            }
         }
 
         public void cancel() {
             this.beaconHandler.stopScan();
-            timer.cancel();
-            running = false;
+            this.interrupt();
         }
 
     }
