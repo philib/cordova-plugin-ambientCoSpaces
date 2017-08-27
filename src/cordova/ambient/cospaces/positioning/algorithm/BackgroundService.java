@@ -3,6 +3,7 @@ package ambient.cospaces.positioning.algorithm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.app.Service;
 import android.os.HandlerThread;
@@ -10,6 +11,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Timer;
@@ -23,6 +27,8 @@ public class BackgroundService extends Service {
     private HandlerThread thread;
     private BeaconHandler beaconHandler;
     private boolean background;
+    protected static final String TAG = "com.htwg.ambientcospaces";
+    private Timer timer;
 
 
     public BackgroundService() {
@@ -47,37 +53,60 @@ public class BackgroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        ServiceRestarter serviceRestarter = new ServiceRestarter();
         //TODO do something useful
         // call a new service handler. The service ID can be used to identify the service
         Message message = mServiceHandler.obtainMessage();
         message.arg1 = startId;
-        if(intent != null){
-            this.background = intent.getBooleanExtra("background", false);
-        }else {
-            this.background = false;
-        }
 
-        if(this.background){
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        this.background = sharedPref.getBoolean("background", false);
+
+        this.timer = new Timer();
+        if (this.background) {
             Toast.makeText(getApplicationContext(), "Background started", Toast.LENGTH_SHORT).show();
-            mServiceHandler.sendMessage(message);
-        }else {
-            Toast.makeText(getApplicationContext(), "Foreground started", Toast.LENGTH_SHORT).show();
+            //mServiceHandler.sendMessage(message);
+            //serviceRestarter.setAlarm(getApplicationContext());
             this.beaconHandler.startScan();
+            TimerTask myTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "Background Service is running");
+                }
+            };
+            timer.schedule(myTask, 3000, 3000);
+            return Service.START_STICKY;
+        } else {
+            Toast.makeText(getApplicationContext(), "Foreground started", Toast.LENGTH_SHORT).show();
+            TimerTask myTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "Foreground Service is running");
+                }
+            };
+            timer.schedule(myTask, 3000, 3000);
+            this.beaconHandler.startScan();
+            return Service.START_NOT_STICKY;
         }
-
-        return Service.START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        if(this.background){
+        super.onDestroy();
+        this.timer.cancel();
+        if (this.background) {
             Toast.makeText(getApplicationContext(), "Background stopped", Toast.LENGTH_SHORT).show();
-            backgroundThread.cancel();
-            thread.quit();
-        }else {
+            //backgroundThread.cancel();
+            this.beaconHandler.stopScan();
+        } else {
             Toast.makeText(getApplicationContext(), "Foreground stopped", Toast.LENGTH_SHORT).show();
             this.beaconHandler.stopScan();
         }
+        Log.i(TAG, "ondestroy!");
+        thread.quit();
     }
 
 
@@ -101,7 +130,7 @@ public class BackgroundService extends Service {
         }
     }
 
-    public class BackgroundThread extends Thread{
+    public class BackgroundThread extends Thread {
         private boolean running = true;
         private BeaconHandler beaconHandler;
         private Timer timer;
@@ -113,7 +142,7 @@ public class BackgroundService extends Service {
         };
 
         public BackgroundThread(BeaconHandler beaconHandler) {
-           this.beaconHandler = beaconHandler;
+            this.beaconHandler = beaconHandler;
         }
 
         @Override
