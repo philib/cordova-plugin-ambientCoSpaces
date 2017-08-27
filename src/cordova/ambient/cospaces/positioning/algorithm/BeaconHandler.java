@@ -16,6 +16,7 @@ public class BeaconHandler implements BeaconConsumer {
     private BeaconManager beaconManager;
     private Region region;
     private Context context;
+    private boolean running = false;
 
     public BeaconHandler(Context context){
         this.context = context;
@@ -25,27 +26,30 @@ public class BeaconHandler implements BeaconConsumer {
     }
 
     public void startScan(){
-        beaconManager.bind(this);
-        beaconManager.setRangeNotifier(new RangeNotifier() {
-            public void didRangeBeaconsInRegion(Collection<org.altbeacon.beacon.Beacon> beacons, Region region) {
-                Log.i(TAG, "BEACONS: " + beacons.size());
-                if (beacons.size() > 0) {
-                    Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
-                    PositioningAlgorithm pa = new PositioningAlgorithm();
+        if(!running){
+            beaconManager.bind(this);
+            beaconManager.setRangeNotifier(new RangeNotifier() {
+                public void didRangeBeaconsInRegion(Collection<org.altbeacon.beacon.Beacon> beacons, Region region) {
+                    Log.i(TAG, "BEACONS: " + beacons.size());
+                    if (beacons.size() > 0) {
+                        Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+                        PositioningAlgorithm pa = new PositioningAlgorithm();
 
-                    Identifier beacon = beacons.iterator().next().getId3();
-                    Position p = pa.calculatePos(beacon.toInt());
-                    Log.i(TAG, "Position is : " + p.x + " " + p.y);
-                    p.imei = Secure.getString(getApplicationContext().getContentResolver(),
-                            Secure.ANDROID_ID);
+                        Identifier beacon = beacons.iterator().next().getId3();
+                        Position p = pa.calculatePos(beacon.toInt());
+                        Log.i(TAG, "Position is : " + p.x + " " + p.y);
+                        p.imei = Secure.getString(getApplicationContext().getContentResolver(),
+                                Secure.ANDROID_ID);
 
-                    Log.i(TAG, "Device Uuid is : " + p.imei);
-                    RestClient c = new RestClient(getApplicationContext());
-                    c.postPosition(p);
+                        Log.i(TAG, "Device Uuid is : " + p.imei);
+                        RestClient c = new RestClient(getApplicationContext());
+                        c.postPosition(p);
 
+                    }
                 }
-            }
-        });
+            });
+            running = true;
+        }
     }
 
     public void stopScan()  {
@@ -57,6 +61,7 @@ public class BeaconHandler implements BeaconConsumer {
         }
         beaconManager.setRangeNotifier(null);
         beaconManager.unbind(this);
+        running = false;
     }
 
     //////// IBeaconConsumer implementation /////////////////////
