@@ -3,9 +3,9 @@ package ambient.cospaces.positioning.algorithm;
 public class PositioningAlgorithm {
 
     private Position position;
-    public Position calculatePos(int beaconId){
+    public void calculatePos(int beaconId){
 
-        position = new Position();
+        position = Position.getInstance();
 
         if (beaconId == 1) {
             position.x = 22;
@@ -119,7 +119,5 @@ public class PositioningAlgorithm {
 
         position.building = "O";
         position.floor = 2;
-
-        return position;
     }
 }

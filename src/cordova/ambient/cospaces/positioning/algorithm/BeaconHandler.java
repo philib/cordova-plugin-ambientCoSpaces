@@ -36,8 +36,10 @@ public class BeaconHandler implements BeaconConsumer {
                         PositioningAlgorithm pa = new PositioningAlgorithm();
 
                         Identifier beacon = beacons.iterator().next().getId3();
-                        Position p = pa.calculatePos(beacon.toInt());
+                        Position p = Position.getInstance();
+                        pa.calculatePos(beacon.toInt());
                         Log.i(TAG, "Position is : " + p.x + " " + p.y);
+                        Log.i(TAG, "User is : " + p.username + " " + p.roleName);
                         p.imei = Secure.getString(getApplicationContext().getContentResolver(),
                                 Secure.ANDROID_ID);
 

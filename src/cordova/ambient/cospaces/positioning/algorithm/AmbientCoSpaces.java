@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import org.apache.cordova.*;
 
 import org.json.JSONArray;
@@ -11,6 +12,7 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Intent;
+import org.json.JSONObject;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -19,6 +21,7 @@ public class AmbientCoSpaces extends CordovaPlugin {
 
     private Intent in;
     private Activity context;
+    protected static final String TAG = "com.htwg.ambientcospaces";
 
     public AmbientCoSpaces() {
     }
@@ -31,12 +34,23 @@ public class AmbientCoSpaces extends CordovaPlugin {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor editor = sharedPref.edit();
 
+        Position p = Position.getInstance();
+        //System.out.println(args.getJSONObject(0).toString());
+        //System.out.println(args.getJSONObject(0));
+
         if (action.equals("startForegroundPositioning")) {
+            JSONObject user = args.getJSONObject(0);
+            p.username = user.getString("username");
+            p.roleColor = user.getString("roleColor");
+            p.roleName = user.getString("roleName");
             editor.putBoolean("background", false);
             editor.commit();
-
             this.start(callbackContext);
         } else if (action.equals("startBackgroundPositioning")) {
+            JSONObject user = args.getJSONObject(0);
+            p.username = user.getString("username");
+            p.roleColor = user.getString("roleColor");
+            p.roleName = user.getString("roleName");
             editor.putBoolean("background", true);
             editor.commit();
             this.start(callbackContext);
