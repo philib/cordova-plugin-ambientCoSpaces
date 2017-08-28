@@ -11,6 +11,8 @@ import android.os.Process;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,6 +44,17 @@ public class BackgroundService extends Service {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         this.background = sharedPref.getBoolean("background", false);
+        Position p = Position.getInstance();
+        String userString = sharedPref.getString("user", null);
+        try {
+            JSONObject user = new JSONObject(userString);
+            p.username = user.getString("username");
+            p.roleName = user.getString("roleName");
+            p.roleColor = user.getString("roleColor");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         this.timer = new Timer();
         if (this.background) {

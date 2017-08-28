@@ -34,23 +34,15 @@ public class AmbientCoSpaces extends CordovaPlugin {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        Position p = Position.getInstance();
-        //System.out.println(args.getJSONObject(0).toString());
-        //System.out.println(args.getJSONObject(0));
-
         if (action.equals("startForegroundPositioning")) {
             JSONObject user = args.getJSONObject(0);
-            p.username = user.getString("username");
-            p.roleColor = user.getString("roleColor");
-            p.roleName = user.getString("roleName");
+            editor.putString("user",user.toString());
             editor.putBoolean("background", false);
             editor.commit();
             this.start(callbackContext);
         } else if (action.equals("startBackgroundPositioning")) {
             JSONObject user = args.getJSONObject(0);
-            p.username = user.getString("username");
-            p.roleColor = user.getString("roleColor");
-            p.roleName = user.getString("roleName");
+            editor.putString("user",user.toString());
             editor.putBoolean("background", true);
             editor.commit();
             this.start(callbackContext);
