@@ -11,6 +11,9 @@ import android.content.ServiceConnection;
 
 import java.util.Collection;
 
+/**
+ * Provides funtionality to scan for beacons, trigger positioning and post the corresponding data to the backend
+ */
 public class BeaconHandler implements BeaconConsumer {
     protected static final String TAG = "com.htwg.ambientcospaces";
     private BeaconManager beaconManager;
@@ -25,6 +28,9 @@ public class BeaconHandler implements BeaconConsumer {
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
     }
 
+    /**
+     * Start the beacon scan. If beacon found, positioning will be triggered and data will be sent to backend
+     */
     public void startScan(){
         if(!running){
             beaconManager.bind(this);
@@ -54,6 +60,9 @@ public class BeaconHandler implements BeaconConsumer {
         }
     }
 
+    /**
+     * Stops the current beacon scan process
+     */
     public void stopScan()  {
         Log.i(TAG, "Stop Scan");
         try {

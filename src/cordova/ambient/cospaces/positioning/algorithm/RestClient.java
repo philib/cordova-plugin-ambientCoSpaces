@@ -1,21 +1,18 @@
 package ambient.cospaces.positioning.algorithm;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.cert.CertificateException;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.net.ssl.*;
 
+/**
+ * Creates HTTP Client to post position data to backend
+ */
 public class RestClient {
     protected static final String TAG = "com.htwg.ambientcospaces";
     private Context context;
@@ -30,6 +27,10 @@ public class RestClient {
         this.client = getUnsafeOkHttpClient();
     }
 
+    /**
+     * Post position object to backend
+     * @param p position object
+     */
     public void postPosition(Position p) {
         String jsonString = "";
         try {
@@ -63,6 +64,10 @@ public class RestClient {
         }
     }
 
+    /**
+     * Allows unsafe http connections
+     * @return OkHttpClient
+     */
     private OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificate chains
@@ -100,90 +105,4 @@ public class RestClient {
             throw new RuntimeException(e);
         }
     }
-
-    public void postPosition2(final int x, final int y) {
-        new AsyncTask<String, String, String>() {
-
-            @Override
-            protected String doInBackground(String... params) {
-                String response = makePostRequest("https://acs.in.htwg-konstanz.de:9999/locationmanagement/locations/",
-                        "{ building: \"O\" }," +
-                                "{ floor: \"2\" }," +
-                                "{ imei: \"12345\" }," +
-                                "{ timestamp: \"1495101496698\" }," +
-                                "{ username: \"Background\" }," +
-                                "{ x: \"" + String.valueOf(x) + "\" }," +
-                                "{ y: \"" + String.valueOf(y) + "\" }," +
-                                "{ roleColor: \"#253bbb\" }," +
-                                "{ roleName: \"Student\" },");
-                return "Success";
-            }
-
-        }.execute("");
-    }
-
-    public static String makePostRequest(String stringUrl, String payload) {
-        StringBuffer jsonString = new StringBuffer();
-        try {
-            URL url = new URL(stringUrl);
-            HttpsURLConnection uc = (HttpsURLConnection) url.openConnection();
-            String line;
-            uc.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            uc.setRequestMethod("POST");
-            uc.setDoInput(true);
-            uc.setInstanceFollowRedirects(false);
-            uc.connect();
-            OutputStreamWriter writer = new OutputStreamWriter(uc.getOutputStream(), "UTF-8");
-            writer.write(payload);
-            writer.close();
-            BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            while ((line = br.readLine()) != null) {
-                jsonString.append(line);
-            }
-            br.close();
-            uc.disconnect();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return jsonString.toString();
-    }
-
-//    public void postPosition2(int x, int y) {
-//        JSONObject data = new JSONObject();
-//        try {
-//            data.put("building", "O");
-//            data.put("floor", "2");
-//            data.put("imei", "12345");
-//            data.put("timestamp", "1495101496698");
-//            data.put("username", "Background");
-//            data.put("x", String.valueOf(x));
-//            data.put("y", String.valueOf(y));
-//            data.put("roleColor", "#253bbb");
-//            data.put("roleName", "Student");
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Future<HttpResponse<JsonNode>> future = Unirest.post("https://acs.in.htwg-konstanz.de:9999/locationmanagement/locations/").header("accept", "application/json")
-//                .body(data)
-//                .asJsonAsync(new Callback<JsonNode>() {
-//
-//                    public void failed(UnirestException e) {
-//                        Log.i(TAG, "The request has failed" + e.getMessage());
-//                    }
-//
-//                    public void completed(HttpResponse<JsonNode> response) {
-//                        Log.i(TAG, "The request has completed");
-//                    }
-//
-//                    public void cancelled() {
-//                        Log.i(TAG, "The request has canceld");
-//                    }
-//
-//                });
-//    }
 }

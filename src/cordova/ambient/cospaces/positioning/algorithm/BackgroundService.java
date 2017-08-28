@@ -42,6 +42,7 @@ public class BackgroundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        // Retrieve background mode and user information from shared preferences
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         this.background = sharedPref.getBoolean("background", false);
         Position p = Position.getInstance();
@@ -57,7 +58,9 @@ public class BackgroundService extends Service {
 
 
         this.timer = new Timer();
+
         if (this.background) {
+            // Service will be restarted by os if enaough ram is available
             Toast.makeText(getApplicationContext(), "Background started", Toast.LENGTH_SHORT).show();
             this.beaconHandler.startScan();
             TimerTask myTask = new TimerTask() {
@@ -69,6 +72,7 @@ public class BackgroundService extends Service {
             timer.schedule(myTask, 3000, 3000);
             return Service.START_STICKY;
         } else {
+            //Service will not be restarted by os
             Toast.makeText(getApplicationContext(), "Foreground started", Toast.LENGTH_SHORT).show();
             TimerTask myTask = new TimerTask() {
                 @Override

@@ -1,9 +1,17 @@
 package ambient.cospaces.positioning.algorithm;
 
+/**
+ * Provides an algorithm to calculate current device position at htwg konstanz
+ */
 public class PositioningAlgorithm {
 
     private Position position;
-    public void calculatePos(int beaconId){
+
+    /**
+     * Calculates the current position of the device depending on the nearest beacon
+     * @param beaconId BeaconId of nearest beacon
+     */
+    public void calculatePos(int beaconId) {
 
         position = Position.getInstance();
 
@@ -111,8 +119,8 @@ public class PositioningAlgorithm {
             position.y = 2;
         }
 
-        int scaleX = 100/24;
-        int scaleY = 100/28;
+        int scaleX = 100 / 24;
+        int scaleY = 100 / 28;
 
         position.x *= scaleX;
         position.y *= scaleY;

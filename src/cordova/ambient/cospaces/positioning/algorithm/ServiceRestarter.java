@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+/**
+ * Restarts BackgroundService after phone completed boooting process
+ */
 public class ServiceRestarter extends BroadcastReceiver {
     protected static final String TAG = "com.htwg.ambientcospaces";
     private boolean background;

@@ -1,5 +1,8 @@
 package ambient.cospaces.positioning.algorithm;
 
+/**
+ * Describes position object
+ */
 public class Position {
     public int x;
     public int y;
