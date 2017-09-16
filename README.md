@@ -1,4 +1,7 @@
 ## Cordova / Phonegap plugin for AmbientCospaces Project at HTWG Konstanz
+
+At the moment this plugin works only on **ANDROID** devices !!
+
 ### Installation
 **Installation from local directory:**
 1. open shell or cmd
@@ -25,12 +28,12 @@ On start a userobject needs to be passed as parameter to be able to update the u
 
 **stopPositioning() :**
 
-Stops the positioning service whether it is running in foreground- or background mode.
+Stops the positioning service whether it is running in foreground or in background mode.
 
 ### Usage
 
 After installing the plugin as described above, you can use the plugin in the application.
-First of all you need to add  ```declave var cordova```  at the beggining of your file In the code you can call the corresponding plugin methods with ```cordova.plugins.AmbientCoSpaces.methodToBeCalled```
+First of all you need to add  ```declare let cordova```  at the beggining of your file In the code you can call the corresponding plugin methods with ```cordova.plugins.AmbientCoSpaces.methodToBeCalled```
 
 Example Typescript file:
 
