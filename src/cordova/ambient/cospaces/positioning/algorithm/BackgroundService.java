@@ -40,6 +40,11 @@ public class BackgroundService extends Service {
     }
 
     @Override
+    public void onTaskRemoved(Intent intent){
+        Log.i(TAG, "onTaskRemoved!");
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // Retrieve background mode and user information from shared preferences
@@ -50,6 +55,10 @@ public class BackgroundService extends Service {
         try {
             JSONObject user = new JSONObject(userString);
             p.username = user.getString("username");
+            /*TODO roleName and Color are not in user object but embedded in roles array user.get
+            user.getJSONArray("roles").getJSONObject(0).getString("roleName");
+            user.getJSONArray("roles").getJSONObject(0).getString("roleColor");
+            */
             p.roleName = user.getString("roleName");
             p.roleColor = user.getString("roleColor");
         } catch (JSONException e) {
