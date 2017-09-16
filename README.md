@@ -29,6 +29,11 @@ Stops the positioning service whether it is running in foreground- or background
 
 ### Usage
 
+After installing the plugin as described above, you can use the plugin in the application.
+First of all you need to add  ```declave var cordova```  at the beggining of your file In the code you can call the corresponding plugin methods with ```cordova.plugins.AmbientCoSpaces.methodToBeCalled```
+
+Example Typescript file:
+
 ```TypeScript
 import ...;
 
