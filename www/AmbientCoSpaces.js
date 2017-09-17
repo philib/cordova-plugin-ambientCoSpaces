@@ -11,3 +11,11 @@ exports.startForegroundPositioning = function(arg0) {
 exports.stopPositioning = function(arg0, success, error) {
     exec(success, error, "AmbientCoSpaces", "stopPositioning", [arg0]);
 };
+
+exports.stopPositioning = function(arg0, success, error) {
+    exec(success, error, "AmbientCoSpaces", "startNotificationSubscribtionService", [arg0]);
+};
+
+exports.stopPositioning = function(arg0, success, error) {
+    exec(success, error, "AmbientCoSpaces", "stopNotificationSubscribtionService", [arg0]);
+};

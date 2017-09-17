@@ -62,6 +62,12 @@
                     android:stopWithTask="false"
                     android:exported="true"></service>
 
+            <service
+                    android:name="ambient.cospaces.positioning.algorithm.NotifactionService"
+                    android:enabled="true"
+                    android:stopWithTask="false"
+                    android:exported="true"></service>
+
             <service android:enabled="true"
                      android:exported="true"
                      android:isolatedProcess="false"
@@ -92,9 +98,12 @@
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
         <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/ServiceRestarter.java"
                      target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
+        <source-file src="src/cordova/ambient/cospaces/positioning/algorithm/NotificationService.java"
+                     target-dir="src/cordova/ambient/cospaces/positioning/algoritm"/>
 
         <source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" />
         <source-file src="libs/android/okhttp-3.8.1.jar" target-dir="libs" framework="true" />
         <source-file src="libs/android/okio-1.13.0.jar" target-dir="libs" framework="true" />
+        <source-file src="libs/android/org.eclipse.paho.client.mqttv3-1.0.2.jar" target-dir="libs" framework="true" />
     </platform>
 </plugin>

@@ -53,6 +53,12 @@ public class ServiceRestarter extends BroadcastReceiver {
                 context.startService(in);
                 Log.i(TAG, "Restart Background Service After Boot");
             }
+
+            in = new Intent(context, NotificationService.class);
+            action = intent.getAction();
+            Log.i(TAG, "BroadcastReciever recieved action = " + action);
+            context.startService(in);
+            Log.i(TAG, "Restart Notification Service After Boot");
         }
     }
 }

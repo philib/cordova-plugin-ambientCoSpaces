@@ -1,17 +1,14 @@
 package ambient.cospaces.positioning.algorithm;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import org.apache.cordova.*;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import android.app.Activity;
-import android.content.Intent;
 import org.json.JSONObject;
 
 /**
@@ -50,6 +47,14 @@ public class AmbientCoSpaces extends CordovaPlugin {
             this.start(callbackContext);
         } else if (action.equals("stopPositioning")) {
             this.stopPositioning(callbackContext);
+        } else if (action.equals("startNotificationSubscribtionService")) {
+            JSONObject user = args.getJSONObject(0);
+            this.setSharedPrefsNotification(user);
+            this.start(callbackContext);
+        } else if (action.equals("stopNotificationSubscribtionService")) {
+            JSONObject user = args.getJSONObject(0);
+            this.setSharedPrefsNotification(user);
+            this.start(callbackContext);
         } else {
             return false;
         }
@@ -57,12 +62,16 @@ public class AmbientCoSpaces extends CordovaPlugin {
     }
 
     /**
-     * Starts the backgroudn service
+     * Starts the backgroudn service and Notification Service
      * @param callbackContext
      */
     private void start(CallbackContext callbackContext) {
         this.stopPositioning(callbackContext);
         if(!isMyServiceRunning()){
+            this.context.startService(in);
+        }
+        this.stopNotification(callbackContext);
+        if(!isMyNotificationServiceRunning()){
             this.context.startService(in);
         }
     }
@@ -73,6 +82,16 @@ public class AmbientCoSpaces extends CordovaPlugin {
      */
     private void stopPositioning(CallbackContext callbackContext) {
         if(isMyServiceRunning()){
+            this.context.stopService(in);
+        }
+    }
+
+    /**
+     * Stops the background service if running
+     * @param callbackContext
+     */
+    private void stopNotification(CallbackContext callbackContext) {
+        if(isMyNotificationServiceRunning()){
             this.context.stopService(in);
         }
     }
@@ -92,6 +111,20 @@ public class AmbientCoSpaces extends CordovaPlugin {
     }
 
     /**
+     * Checks whether the BackgroundService is running or not
+     * @return True if already running, false if not
+     */
+    private boolean isMyNotificationServiceRunning() {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Saves user and backgroudn mode as shared preferences.
      * @param user user json object
      * @param background boolean whether service should be running in background or foreground mode
@@ -101,6 +134,18 @@ public class AmbientCoSpaces extends CordovaPlugin {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("user",user.toString());
         editor.putBoolean("background", background);
+        editor.commit();
+    }
+
+    /**
+     * Saves user and backgroudn mode as shared preferences.
+     * @param user user json object
+     * @param background boolean whether service should be running in background or foreground mode
+     */
+    private void setSharedPrefsNotification(JSONObject user){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("user",user.toString());
         editor.commit();
     }
 
