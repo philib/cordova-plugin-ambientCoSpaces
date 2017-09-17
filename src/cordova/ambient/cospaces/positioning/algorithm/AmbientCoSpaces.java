@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,26 +36,30 @@ public class AmbientCoSpaces extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.context = cordova.getActivity();
-        this.in = new Intent(context, BackgroundService.class);
 
         if (action.equals("startForegroundPositioning")) {
+            this.in = new Intent(context, BackgroundService.class);
             JSONObject user = args.getJSONObject(0);
             this.setSharedPrefs(user,false);
-            this.start(callbackContext);
+            this.startPositoning(callbackContext);
         } else if (action.equals("startBackgroundPositioning")) {
+            this.in = new Intent(context, BackgroundService.class);
             JSONObject user = args.getJSONObject(0);
             this.setSharedPrefs(user,true);
-            this.start(callbackContext);
+            this.startPositoning(callbackContext);
         } else if (action.equals("stopPositioning")) {
+            this.in = new Intent(context, BackgroundService.class);
             this.stopPositioning(callbackContext);
-        } else if (action.equals("startNotificationSubscribtionService")) {
+        } else if (action.equals("startNotificationSubscriptionService")) {
+            this.in = new Intent(context, NotificationService.class);
             JSONObject user = args.getJSONObject(0);
             this.setSharedPrefsNotification(user);
-            this.start(callbackContext);
-        } else if (action.equals("stopNotificationSubscribtionService")) {
+            this.startNotification(callbackContext);
+        } else if (action.equals("stopNotificationSubscriptionService")) {
+            this.in = new Intent(context, NotificationService.class);
             JSONObject user = args.getJSONObject(0);
             this.setSharedPrefsNotification(user);
-            this.start(callbackContext);
+            this.stopNotification(callbackContext);
         } else {
             return false;
         }
@@ -65,11 +70,18 @@ public class AmbientCoSpaces extends CordovaPlugin {
      * Starts the backgroudn service and Notification Service
      * @param callbackContext
      */
-    private void start(CallbackContext callbackContext) {
+    private void startPositoning(CallbackContext callbackContext) {
         this.stopPositioning(callbackContext);
         if(!isMyServiceRunning()){
             this.context.startService(in);
         }
+    }
+
+    /**
+     * Starts the backgroudn service and Notification Service
+     * @param callbackContext
+     */
+    private void startNotification(CallbackContext callbackContext) {
         this.stopNotification(callbackContext);
         if(!isMyNotificationServiceRunning()){
             this.context.startService(in);
@@ -140,12 +152,17 @@ public class AmbientCoSpaces extends CordovaPlugin {
     /**
      * Saves user and backgroudn mode as shared preferences.
      * @param user user json object
-     * @param background boolean whether service should be running in background or foreground mode
      */
     private void setSharedPrefsNotification(JSONObject user){
+        String accountId = "";
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("user",user.toString());
+        try {
+            accountId = user.getString("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        editor.putString("accountId", accountId);
         editor.commit();
     }
 

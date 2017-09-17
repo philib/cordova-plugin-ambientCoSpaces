@@ -12,9 +12,9 @@ import android.os.Looper;
 import android.os.Process;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NotificationService extends Service {
@@ -23,7 +23,7 @@ public class NotificationService extends Service {
     private HandlerThread thread;
     private String accountId;
     protected static final String TAG = "com.htwg.ambientcospaces";
-    private MqttClient client;
+    private MqttAndroidClient client;
 
     @Override
     public void onCreate() {
@@ -41,12 +41,11 @@ public class NotificationService extends Service {
 
         // Retrieve background mode and user information from shared preferences
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String userString = sharedPref.getString("user", null);
         try {
-            JSONObject user = new JSONObject(userString);
-            this.accountId = user.getString("id");
+            this.accountId = sharedPref.getString("accountId", null);
+            //JSONObject user = new JSONObject(userString);
             this.subscribe();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Service.START_NOT_STICKY;
@@ -66,12 +65,11 @@ public class NotificationService extends Service {
     }
 
     private void subscribe(){
+        this.client = new MqttAndroidClient(this.getApplicationContext(),
+                "tcp://acs.in.htwg-konstanz.de:1883", //URI
+                this.accountId,
+                new MemoryPersistence()); //ClientId
         try {
-            this.client = new MqttClient(
-                    "tcp://acs.in.htwg-konstanz.de:1883", //URI
-                    this.accountId, //ClientId
-                    new MemoryPersistence()); //Persistence
-
             client.setCallback(new MqttCallback() {
 
                 @Override
@@ -97,9 +95,14 @@ public class NotificationService extends Service {
                 }
             });
 
-            this.client.connect();
-            this.client.subscribe(this.accountId);
-        } catch (MqttException e) {
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setUserName("guest");
+            options.setPassword("guest".toCharArray());
+
+            this.client.connect(options);
+
+            this.client.subscribe(this.accountId, 1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
