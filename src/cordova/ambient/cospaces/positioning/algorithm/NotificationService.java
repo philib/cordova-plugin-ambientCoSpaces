@@ -76,13 +76,13 @@ public class NotificationService extends Service {
 
 
     private void unsubscribe() {
-//        try {
-//            Log.i(TAG, "Unsubscribe and disconnect");
-//            this.client.unsubscribe(this.accountId);
-//            this.client.disconnect();
-//        } catch (MqttException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Log.i(TAG, "Unsubscribe and disconnect");
+            this.client.unsubscribe(this.accountId);
+            this.client.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private void connect() {
