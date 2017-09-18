@@ -41,15 +41,21 @@ public class NotificationService extends Service {
         // Retrieve background mode and user information from shared preferences
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try {
+            Log.i(TAG, "Notification Service started!");
             this.accountId = sharedPref.getString("accountId", null);
-            Log.i(TAG, "AccountID: "+ this.accountId);
+            Log.i(TAG, "AccountID: " + this.accountId);
             //JSONObject user = new JSONObject(userString);
             this.connect();
         } catch (Exception e) {
-            Log.i(TAG, "Error: "+ e.getMessage());
+            Log.i(TAG, "Error: " + e.getMessage());
             e.printStackTrace();
         }
-        return Service.START_NOT_STICKY;
+        return Service.START_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent intent) {
+        Log.i(TAG, "onTaskRemoved!");
     }
 
     @Override
@@ -65,67 +71,6 @@ public class NotificationService extends Service {
         return null;
     }
 
-    private void subscribe(){
-//        this.client = new MqttAndroidClient(this.getApplicationContext(),
-//                "tcp://acs.in.htwg-konstanz.de:1883", //URI
-//                this.accountId,
-//                new MemoryPersistence()); //ClientId
-//        try {
-//            client.setCallback(new MqttCallback() {
-//
-//                @Override
-//                public void connectionLost(Throwable cause) { //Called when the client lost the connection to the broker
-//                    Log.i(TAG, "Connection Lost!");
-//                }
-//
-//                @Override
-//                public void messageArrived(String topic, MqttMessage message) throws Exception {
-//                    Log.i(TAG, "Message arrived!");
-//                    JSONObject messageJSON = new JSONObject(message.getPayload().toString());
-//
-//                    Notification n = new Notification.Builder(getApplicationContext())
-//                            .setContentTitle(messageJSON.getString("title"))
-//                            .setContentText(messageJSON.getString("message")).build();
-//
-//                    NotificationManager notificationManager =
-//                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//
-//                    notificationManager.notify(0, n);
-//                }
-//
-//                @Override
-//                public void deliveryComplete(IMqttDeliveryToken token) {//Called when a outgoing publish is complete
-//                    Log.i(TAG, "Connection Lost!");
-//                }
-//            });
-//
-//            MqttConnectOptions options = new MqttConnectOptions();
-//            options.setUserName("guest");
-//            options.setPassword("guest".toCharArray());
-//
-//            Log.i(TAG, "Client connect!");
-//            IMqttToken iMqttToken = this.client.connect(options);
-//            iMqttToken.setActionCallback(new IMqttActionListener() {
-//                @Override
-//                public void onSuccess(IMqttToken iMqttToken) {
-//                    try {
-//                        client.subscribe(accountId, 1);
-//                    } catch (MqttException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-//
-//                }
-//            });
-//            Log.i(TAG, "Subscribe:" + this.client + " " + this.accountId + " " + options);
-//        } catch (Exception e) {
-//            Log.i(TAG, "Subscribe Error :" + e.getMessage());
-//            e.printStackTrace();
-//        }
-    }
 
     private void unsubscribe() {
 //        try {
@@ -137,7 +82,7 @@ public class NotificationService extends Service {
 //        }
     }
 
-    private void connect(){
+    private void connect() {
         MemoryPersistence persistence = new MemoryPersistence();
         try {
             client = new MqttAsyncClient("tcp://acs.in.htwg-konstanz.de:1883", accountId, persistence);
@@ -151,6 +96,7 @@ public class NotificationService extends Service {
             public void connectionLost(Throwable cause) {
                 Log.i(TAG, "Connection Lost " + cause.toString());
             }
+
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.i(TAG, "topic is " + topic + ". payload is " + message.toString());
