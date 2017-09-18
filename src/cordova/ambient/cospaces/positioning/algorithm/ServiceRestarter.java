@@ -18,6 +18,7 @@ import java.util.List;
 public class ServiceRestarter extends BroadcastReceiver {
     protected static final String TAG = "com.htwg.ambientcospaces";
     private boolean background;
+    private String accountId;
 
     public ServiceRestarter() {
 
@@ -32,6 +33,7 @@ public class ServiceRestarter extends BroadcastReceiver {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.background = sharedPref.getBoolean("background", false);
+        this.accountId = sharedPref.getString("accountId", null);
 
         if(action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)){
             Log.i(TAG, "Network State Changed");
@@ -54,11 +56,11 @@ public class ServiceRestarter extends BroadcastReceiver {
                 Log.i(TAG, "Restart Background Service After Boot");
             }
 
-            in = new Intent(context, NotificationService.class);
-            action = intent.getAction();
-            Log.i(TAG, "BroadcastReciever recieved action = " + action);
-            context.startService(in);
-            Log.i(TAG, "Restart Notification Service After Boot");
+            if(this.accountId != null){
+                context.startService(new Intent(context,NotificationService.class));
+                Log.i(TAG, "Restart Notification Service After Boot");
+            }
         }
+        Log.i(TAG, "BroadcastReciever recieved action = " + action);
     }
 }
