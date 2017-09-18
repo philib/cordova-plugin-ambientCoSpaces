@@ -17,6 +17,11 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.json.JSONObject;
 
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class NotificationService extends Service {
 
     private Looper mServiceLooper;
@@ -64,6 +69,20 @@ public class NotificationService extends Service {
         return null;
     }
 
+    private Boolean checkVPN(){
+        List<String> networkList = new ArrayList<String>();
+        try {
+            for (NetworkInterface networkInterface : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                if (networkInterface.isUp())
+                    networkList.add(networkInterface.getName());
+            }
+        } catch (Exception ex) {
+            //Timber.d("isVpnUsing Network List didn't received");
+        }
+
+        return networkList.contains("tun0");
+    }
+
     private void subscribe(){
         this.client = new MqttAndroidClient(this.getApplicationContext(),
                 "tcp://acs.in.htwg-konstanz.de:1883", //URI
@@ -99,7 +118,8 @@ public class NotificationService extends Service {
             options.setUserName("guest");
             options.setPassword("guest".toCharArray());
 
-            this.client.connect(options);
+            if(this.checkVPN())
+                this.client.connect(options);
 
             this.client.subscribe(this.accountId, 1);
         } catch (Exception e) {
