@@ -45,7 +45,10 @@ public class NotificationService extends Service {
             this.accountId = sharedPref.getString("accountId", null);
             Log.i(TAG, "AccountID: " + this.accountId);
             //JSONObject user = new JSONObject(userString);
-            this.connect();
+            if(this.accountId != null){
+                //Subribe nur wenn User eingeloggt ist
+                this.connect();
+            }
         } catch (Exception e) {
             Log.i(TAG, "Error: " + e.getMessage());
             e.printStackTrace();
