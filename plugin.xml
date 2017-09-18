@@ -9,6 +9,7 @@
 
     <platform name="android">
         <framework src="com.android.support:support-v4:25.+" value="gradle" />
+        <framework src="org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0" />
 
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="AmbientCoSpaces">
@@ -106,7 +107,5 @@
         <source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" />
         <source-file src="libs/android/okhttp-3.8.1.jar" target-dir="libs" framework="true" />
         <source-file src="libs/android/okio-1.13.0.jar" target-dir="libs" framework="true" />
-        <source-file src="libs/android/org.eclipse.paho.android.service-1.1.1.jar" target-dir="libs" framework="true" />
-        <source-file src="libs/android/org.eclipse.paho.client.mqttv3-1.1.1.jar" target-dir="libs" framework="true" />
     </platform>
 </plugin>
