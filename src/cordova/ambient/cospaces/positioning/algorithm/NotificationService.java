@@ -22,7 +22,7 @@ public class NotificationService extends Service {
     private Looper mServiceLooper;
     private HandlerThread thread;
     private String accountId;
-    protected static final String TAG = "com.htwg.ambientcospaces";
+    protected static final String TAG = "com.htwg.ambientcospaces.notification";
     private MqttAndroidClient client;
 
     @Override
@@ -43,9 +43,11 @@ public class NotificationService extends Service {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try {
             this.accountId = sharedPref.getString("accountId", null);
+            Log.i(TAG, "AccountID: "+ this.accountId);
             //JSONObject user = new JSONObject(userString);
             this.subscribe();
         } catch (Exception e) {
+            Log.i(TAG, "Error: "+ e.getMessage());
             e.printStackTrace();
         }
         return Service.START_NOT_STICKY;
@@ -74,13 +76,15 @@ public class NotificationService extends Service {
 
                 @Override
                 public void connectionLost(Throwable cause) { //Called when the client lost the connection to the broker
+                    Log.i(TAG, "Connection Lost!");
                 }
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    Log.i(TAG, "Message arrived!");
                     JSONObject messageJSON = new JSONObject(message.getPayload().toString());
 
-                    Notification n  = new Notification.Builder(getApplicationContext())
+                    Notification n = new Notification.Builder(getApplicationContext())
                             .setContentTitle(messageJSON.getString("title"))
                             .setContentText(messageJSON.getString("message")).build();
 
@@ -92,6 +96,7 @@ public class NotificationService extends Service {
 
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken token) {//Called when a outgoing publish is complete
+                    Log.i(TAG, "Connection Lost!");
                 }
             });
 
@@ -99,16 +104,19 @@ public class NotificationService extends Service {
             options.setUserName("guest");
             options.setPassword("guest".toCharArray());
 
+            Log.i(TAG, "Client connect!");
             this.client.connect(options);
-
+            Log.i(TAG, "Subscribe:" + this.client + " " + this.accountId + " " + options);
             this.client.subscribe(this.accountId, 1);
         } catch (Exception e) {
+            Log.i(TAG, "Subscribe Error :" + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void unsubscribe(){
+    private void unsubscribe() {
         try {
+            Log.i(TAG, "Unsubscribe and disconnect");
             this.client.unsubscribe(this.accountId);
             this.client.disconnect();
         } catch (MqttException e) {
