@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
+import android.util.Log;
 import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,14 +51,14 @@ public class AmbientCoSpaces extends CordovaPlugin {
             this.in = new Intent(context, BackgroundService.class);
             this.stopPositioning(callbackContext);
         } else if (action.equals("startNotificationSubscriptionService")) {
+            Log.i(TAG,"Login");
             this.in = new Intent(context, NotificationService.class);
             JSONObject user = args.getJSONObject(0);
             this.setSharedPrefsNotification(user);
             this.startNotification(callbackContext);
         } else if (action.equals("stopNotificationSubscriptionService")) {
+            Log.i(TAG,"Logout clickt");
             this.in = new Intent(context, NotificationService.class);
-            JSONObject user = args.getJSONObject(0);
-            this.setSharedPrefsNotification(user);
             this.stopNotification(callbackContext);
         } else {
             return false;

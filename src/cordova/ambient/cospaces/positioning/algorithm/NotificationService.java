@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NotificationService extends Service {
@@ -103,14 +104,7 @@ public class NotificationService extends Service {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.i(TAG, "topic is " + topic + ". payload is " + message.toString());
-                JSONObject messageJSON = new JSONObject(message.toString());
-                Notification n = new Notification.Builder(getApplicationContext())
-                        .setContentTitle(messageJSON.getString("title"))
-                        .setContentText(messageJSON.getString("message"))
-                        .setSmallIcon(android.R.drawable.ic_notification_overlay).build();
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(message.getId(), n);
+                sendNotification(message);
             }
 
             @Override
@@ -143,6 +137,22 @@ public class NotificationService extends Service {
                 }
             });
         } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendNotification(MqttMessage message){
+        JSONObject messageJSON = null;
+        try {
+            messageJSON = new JSONObject(message.toString());
+            Notification n = new Notification.Builder(getApplicationContext())
+                    .setContentTitle(messageJSON.getString("title"))
+                    .setContentText(messageJSON.getString("message"))
+                    .setSmallIcon(android.R.drawable.ic_notification_overlay).build();
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(message.getId(), n);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
