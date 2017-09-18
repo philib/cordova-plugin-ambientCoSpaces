@@ -154,15 +154,14 @@ public class NotificationService extends Service {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.i(TAG, "topic is " + topic + ". payload is " + message.toString());
-                JSONObject msg = new JSONObject(message.toString());
+                JSONObject messageJSON = new JSONObject(message.toString());
                 Notification n = new Notification.Builder(getApplicationContext())
-                            .setContentTitle(msg.getString("title"))
-                            .setContentText(msg.getString("message")).build();
-
-                    NotificationManager notificationManager =
-                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-                    notificationManager.notify(0, n);
+                        .setContentTitle(messageJSON.getString("title"))
+                        .setContentText(messageJSON.getString("message"))
+                        .setSmallIcon(android.R.drawable.ic_notification_overlay).build();
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(message.getId(), n);
             }
 
             @Override
@@ -176,7 +175,7 @@ public class NotificationService extends Service {
                     Log.i(TAG, "Connected");
                     try {
                         Log.i(TAG, "Subscribe");
-                        client.subscribe(accountId, 1, null, new IMqttActionListener() {
+                        client.subscribe(accountId, 2, null, new IMqttActionListener() {
                             public void onSuccess(IMqttToken iMqttToken) {
                                 Log.i(TAG, "Subscribe successfull");
                             }
