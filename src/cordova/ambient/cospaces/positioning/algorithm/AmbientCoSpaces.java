@@ -82,7 +82,6 @@ public class AmbientCoSpaces extends CordovaPlugin {
      * @param callbackContext
      */
     private void startNotification(CallbackContext callbackContext) {
-        this.stopNotification(callbackContext);
         if(!isMyNotificationServiceRunning()){
             this.context.startService(in);
         }
@@ -105,6 +104,11 @@ public class AmbientCoSpaces extends CordovaPlugin {
     private void stopNotification(CallbackContext callbackContext) {
         if(isMyNotificationServiceRunning()){
             this.context.stopService(in);
+            //Delete shared pref key account id after loggin out
+            SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+            SharedPreferences.Editor editor = mySPrefs.edit();
+            editor.remove("accountId");
+            editor.apply();
         }
     }
 
