@@ -105,9 +105,23 @@ public class NotificationService extends Service {
             options.setPassword("guest".toCharArray());
 
             Log.i(TAG, "Client connect!");
-            this.client.connect(options);
+            IMqttToken iMqttToken = this.client.connect(options);
+            iMqttToken.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken iMqttToken) {
+                    try {
+                        client.subscribe(accountId, 1);
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+
+                }
+            });
             Log.i(TAG, "Subscribe:" + this.client + " " + this.accountId + " " + options);
-            this.client.subscribe(this.accountId, 1);
         } catch (Exception e) {
             Log.i(TAG, "Subscribe Error :" + e.getMessage());
             e.printStackTrace();
