@@ -146,9 +146,12 @@ public class NotificationService extends Service {
         try {
             messageJSON = new JSONObject(message.toString());
             Notification n = new Notification.Builder(getApplicationContext())
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setDefaults(Notification.DEFAULT_ALL)
                     .setContentTitle(messageJSON.getString("title"))
                     .setContentText(messageJSON.getString("message"))
                     .setSmallIcon(android.R.drawable.ic_notification_overlay).build();
+
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(message.getId(), n);
