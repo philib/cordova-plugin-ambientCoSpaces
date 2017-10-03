@@ -46,22 +46,22 @@ public class BackgroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         // Retrieve background mode and user information from shared preferences
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         this.background = sharedPref.getBoolean("background", false);
         Position p = Position.getInstance();
         String userString = sharedPref.getString("user", null);
+        Log.i(TAG, "userString: "+userString);
         try {
             JSONObject user = new JSONObject(userString);
-            p.username = user.getString("username");
+            p.username = user.getString("firstName") + " " + user.getString("lastName");
             /*TODO roleName and Color are not in user object but embedded in roles array user.get
             user.getJSONArray("roles").getJSONObject(0).getString("roleName");
             user.getJSONArray("roles").getJSONObject(0).getString("roleColor");
             */
-            p.roleName = user.getString("roleName");
-            p.roleColor = user.getString("roleColor");
-            Log.i(TAG, "onStart: "+userString);
+            p.roleName = user.getJSONArray("roles").getJSONObject(0).getString("name");
+//            p.roleColor = user.getString("roleColor");
+//            Log.i(TAG, "roleName: "+user.getJSONArray("roles").getJSONObject(0).getString("name") + " roleColor: "+user.getJSONArray("roles").getJSONObject(0).getString("roleColor"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

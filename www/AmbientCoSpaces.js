@@ -1,11 +1,11 @@
 var exec = require('cordova/exec');
 
-exports.startBackgroundPositioning = function(arg0) {
-    exec(null, null, "AmbientCoSpaces", "startBackgroundPositioning", [arg0]);
+exports.startBackgroundPositioning = function(user, url) {
+    exec(null, null, "AmbientCoSpaces", "startBackgroundPositioning", [user, url]);
 };
 
-exports.startForegroundPositioning = function(arg0) {
-    exec(null, null, "AmbientCoSpaces", "startForegroundPositioning", [arg0]);
+exports.startForegroundPositioning = function(user, url) {
+    exec(null, null, "AmbientCoSpaces", "startForegroundPositioning", [user, url]);
 };
 
 exports.stopPositioning = function(arg0, success, error) {

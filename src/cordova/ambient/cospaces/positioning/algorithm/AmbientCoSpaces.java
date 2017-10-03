@@ -17,9 +17,10 @@ import org.json.JSONObject;
  */
 public class AmbientCoSpaces extends CordovaPlugin {
 
-    private Intent in;
     private Activity context;
     protected static final String TAG = "com.htwg.ambientcospaces";
+    private Intent backgroundService;
+    private Intent notificationService;
 
     public AmbientCoSpaces() {
     }
@@ -42,26 +43,25 @@ public class AmbientCoSpaces extends CordovaPlugin {
         boolean stopPositioning = action.equals("stopPositioning");
         boolean startNotification = action.equals("startNotificationSubscriptionService");
         boolean stopNotification = action.equals("stopNotificationSubscriptionService");
+        boolean startBackground = startBackgroundPositioning || startForegroundPositioning;
 
-        if(startBackgroundPositioning || startForegroundPositioning){
-            this.in = new Intent(context, BackgroundService.class);
+        this.backgroundService = new Intent(context, BackgroundService.class);
+        this.notificationService = new Intent(context, NotificationService.class);
+
+        if(startBackground){
             JSONObject user = args.getJSONObject(0);
-            String backendUrl = args.getString(1);
-            this.setSharedPrefs(user,startBackgroundPositioning, backendUrl);
-            this.startPositoning(callbackContext);
-            Log.i(TAG, "back: "+startBackgroundPositioning+" , fore: "+startForegroundPositioning);
+            this.setSharedPrefs(user,startBackgroundPositioning, args.getString(1));
+            this.context.stopService(this.backgroundService);
+            this.context.startService(this.backgroundService);
         } else if (stopPositioning) {
-            this.in = new Intent(context, BackgroundService.class);
-            this.stopPositioning(callbackContext);
+            this.context.stopService(this.backgroundService);
         } else if (startNotification) {
             Log.i(TAG,"Login");
-            this.in = new Intent(context, NotificationService.class);
             JSONObject user = args.getJSONObject(0);
             this.setSharedPrefsNotification(user);
             this.startNotification(callbackContext);
         } else if (stopNotification) {
             Log.i(TAG,"Logout clickt");
-            this.in = new Intent(context, NotificationService.class);
             this.stopNotification(callbackContext);
         } else {
             return false;
@@ -73,30 +73,9 @@ public class AmbientCoSpaces extends CordovaPlugin {
      * Starts the backgroudn service and Notification Service
      * @param callbackContext
      */
-    private void startPositoning(CallbackContext callbackContext) {
-        this.stopPositioning(callbackContext);
-        if(!isMyServiceRunning()){
-            this.context.startService(in);
-        }
-    }
-
-    /**
-     * Starts the backgroudn service and Notification Service
-     * @param callbackContext
-     */
     private void startNotification(CallbackContext callbackContext) {
         if(!isMyNotificationServiceRunning()){
-            this.context.startService(in);
-        }
-    }
-
-    /**
-     * Stops the background service if running
-     * @param callbackContext
-     */
-    private void stopPositioning(CallbackContext callbackContext) {
-        if(isMyServiceRunning()){
-            this.context.stopService(in);
+            this.context.startService(this.notificationService);
         }
     }
 
@@ -106,7 +85,7 @@ public class AmbientCoSpaces extends CordovaPlugin {
      */
     private void stopNotification(CallbackContext callbackContext) {
         if(isMyNotificationServiceRunning()){
-            this.context.stopService(in);
+            this.context.stopService(this.notificationService);
             //Delete shared pref key account id after loggin out
             SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = mySPrefs.edit();
@@ -115,19 +94,6 @@ public class AmbientCoSpaces extends CordovaPlugin {
         }
     }
 
-    /**
-     * Checks whether the BackgroundService is running or not
-     * @return True if already running, false if not
-     */
-    private boolean isMyServiceRunning() {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (BackgroundService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Checks whether the BackgroundService is running or not
