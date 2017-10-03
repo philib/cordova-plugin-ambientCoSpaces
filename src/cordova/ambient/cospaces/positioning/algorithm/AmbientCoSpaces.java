@@ -27,8 +27,9 @@ public class AmbientCoSpaces extends CordovaPlugin {
 
     /**
      * Is executed each time the cordova app triggers an plugin action. Depending on the action the corresponding function will be triggered
-     * @param action the method wich was called by the app
-     * @param args passed parameters
+     *
+     * @param action          the method wich was called by the app
+     * @param args            passed parameters
      * @param callbackContext callback possiblity for app
      * @return
      * @throws JSONException
@@ -48,20 +49,20 @@ public class AmbientCoSpaces extends CordovaPlugin {
         this.backgroundService = new Intent(context, BackgroundService.class);
         this.notificationService = new Intent(context, NotificationService.class);
 
-        if(startBackground){
+        if (startBackground) {
             JSONObject user = args.getJSONObject(0);
-            this.setSharedPrefs(user,startBackgroundPositioning, args.getString(1));
+            this.setSharedPrefs(user, startBackgroundPositioning, args.getString(1));
             this.context.stopService(this.backgroundService);
             this.context.startService(this.backgroundService);
         } else if (stopPositioning) {
             this.context.stopService(this.backgroundService);
         } else if (startNotification) {
-            Log.i(TAG,"Login");
+            Log.i(TAG, "Login");
             JSONObject user = args.getJSONObject(0);
             this.setSharedPrefsNotification(user);
             this.startNotification(callbackContext);
         } else if (stopNotification) {
-            Log.i(TAG,"Logout clickt");
+            Log.i(TAG, "Logout clickt");
             this.stopNotification(callbackContext);
         } else {
             return false;
@@ -71,20 +72,22 @@ public class AmbientCoSpaces extends CordovaPlugin {
 
     /**
      * Starts the backgroudn service and Notification Service
+     *
      * @param callbackContext
      */
     private void startNotification(CallbackContext callbackContext) {
-        if(!isMyNotificationServiceRunning()){
+        if (!isMyNotificationServiceRunning()) {
             this.context.startService(this.notificationService);
         }
     }
 
     /**
      * Stops the background service if running
+     *
      * @param callbackContext
      */
     private void stopNotification(CallbackContext callbackContext) {
-        if(isMyNotificationServiceRunning()){
+        if (isMyNotificationServiceRunning()) {
             this.context.stopService(this.notificationService);
             //Delete shared pref key account id after loggin out
             SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(this.context);
@@ -97,6 +100,7 @@ public class AmbientCoSpaces extends CordovaPlugin {
 
     /**
      * Checks whether the BackgroundService is running or not
+     *
      * @return True if already running, false if not
      */
     private boolean isMyNotificationServiceRunning() {
@@ -111,13 +115,14 @@ public class AmbientCoSpaces extends CordovaPlugin {
 
     /**
      * Saves user and backgroudn mode as shared preferences.
-     * @param user user json object
+     *
+     * @param user       user json object
      * @param background boolean whether service should be running in background or foreground mode
      */
-    private void setSharedPrefs(JSONObject user, boolean background, String backendUrl){
+    private void setSharedPrefs(JSONObject user, boolean background, String backendUrl) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("user",user.toString());
+        editor.putString("user", user.toString());
         editor.putBoolean("background", background);
         editor.putString("backendUrl", backendUrl);
         editor.commit();
@@ -125,9 +130,10 @@ public class AmbientCoSpaces extends CordovaPlugin {
 
     /**
      * Saves user and backgroudn mode as shared preferences.
+     *
      * @param user user json object
      */
-    private void setSharedPrefsNotification(JSONObject user){
+    private void setSharedPrefsNotification(JSONObject user) {
         String accountId = "";
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor editor = sharedPref.edit();
