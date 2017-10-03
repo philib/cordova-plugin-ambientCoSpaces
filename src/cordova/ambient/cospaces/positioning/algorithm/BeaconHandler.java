@@ -36,7 +36,7 @@ public class BeaconHandler implements BeaconConsumer {
             beaconManager.bind(this);
             beaconManager.setRangeNotifier(new RangeNotifier() {
                 public void didRangeBeaconsInRegion(Collection<org.altbeacon.beacon.Beacon> beacons, Region region) {
-                    Log.i(TAG, "BEACONS: " + beacons.size());
+//                    Log.i(TAG, "BEACONS: " + beacons.size());
                     if (beacons.size() > 0) {
                         Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
                         PositioningAlgorithm pa = new PositioningAlgorithm();
