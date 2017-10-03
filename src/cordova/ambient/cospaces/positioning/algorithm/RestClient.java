@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,12 +22,16 @@ public class RestClient {
     private Request request;
     private OkHttpClient client;
     private String json;
+    private String backendUrl;
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
 
     public RestClient(Context c) {
         this.context = c;
         this.client = getUnsafeOkHttpClient();
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
+        this.backendUrl = sharedPref.getString("backendUrl", null);
     }
 
     /**
@@ -51,16 +58,18 @@ public class RestClient {
 
 
         RequestBody body = RequestBody.create(JSON, jsonString);
-        this.request = new Request.Builder()
-                .url("https://acs.in.htwg-konstanz.de:9999/locationmanagement/locations/")
-                .post(body)
-                .build();
-        try {
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            System.out.println(response.body().string());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(this.backendUrl != null){
+            this.request = new Request.Builder()
+                    .url(this.backendUrl)
+                    .post(body)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                System.out.println(response.body().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

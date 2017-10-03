@@ -9,9 +9,9 @@ public class Position {
     public String building = "O";
     public int floor = 2;
     public String username = "no_username";
-    public String roleColor = "#253bbb";
-    public String roleName = "Student";
-    public String imei = "1234";
+    public String roleColor = "#ffffff";
+    public String roleName = "no_role";
+    public String imei = "no_imei";
 
     // Eine (versteckte) Klassenvariable vom Typ der eigenen Klasse
     private static Position instance;

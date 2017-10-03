@@ -61,6 +61,7 @@ public class BackgroundService extends Service {
             */
             p.roleName = user.getString("roleName");
             p.roleColor = user.getString("roleColor");
+            Log.i(TAG, "onStart: "+userString);
         } catch (JSONException e) {
             e.printStackTrace();
         }
